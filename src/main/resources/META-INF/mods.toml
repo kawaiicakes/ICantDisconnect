@@ -1,0 +1,31 @@
+modLoader="javafml" #mandatory
+loaderVersion="[43,)"
+license="All rights reserved"
+issueTrackerURL="https://github.com/kawaiicakes/ICantDisconnect/issues/"
+
+[[mods]]
+modId="icantdisconnect"
+version="${file.jarVersion}"
+displayName="I Can't Disconnect!"
+displayURL="https://github.com/kawaiicakes/ICantDisconnect/"
+logoFile="examplemod.png"
+credits="To the valued member of the AshleyCraft community! <3"
+authors="kawaiicakes"
+
+description='''
+Prevents players from disconnecting. At least in a sense. ¯\_(ツ)_/¯
+'''
+
+[[dependencies.icantdisconnect]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.icantdisconnect]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
