@@ -99,7 +99,7 @@ jar {
         attributes([
                 "Specification-Title"     : "homoflesh",
                 "Specification-Vendor"    : "kawaiicakes",
-                "Specification-Version"   : "0.1.0",
+                "Specification-Version"   : "1.0.0",
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "kawaiicakes",
