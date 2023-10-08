@@ -25,7 +25,7 @@ public class HomunculusFleshPuppets
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.register(this);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, CONFIG);
 
         modEventBus.register(DisconnectEvent.class);
         EntityRegistry.register(modEventBus);
