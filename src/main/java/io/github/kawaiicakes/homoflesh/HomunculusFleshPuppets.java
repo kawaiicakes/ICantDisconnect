@@ -29,7 +29,7 @@ public class HomunculusFleshPuppets
                     EntityType.Builder.of(Homunculus::new, MobCategory.CREATURE)
                             .sized(0.4f, 1.5f)
                             .setShouldReceiveVelocityUpdates(true)
-                            .setTrackingRange(Config.entityVisionRangeBlocks())
+                            // .setTrackingRange(Config.entityVisionRangeBlocks())
                             .setUpdateInterval(1) // wtf does this do lol
                             .build(new ResourceLocation(MOD_ID, "homunculus").toString()));
 
