@@ -1,4 +1,4 @@
-package io.github.kawaiicakes.icantdisconnect;
+package io.github.kawaiicakes.homoflesh;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

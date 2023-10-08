@@ -4,26 +4,26 @@ license="MIT"
 issueTrackerURL="https://github.com/kawaiicakes/ICantDisconnect/issues/"
 
 [[mods]]
-modId="icantdisconnect"
-version="${file.jarVersion}"
-displayName="I Can't Disconnect!"
+modId="homoflesh"
+version="1.0.0"
+displayName="Homunculus Flesh Puppets"
 displayURL="https://github.com/kawaiicakes/ICantDisconnect/"
-logoFile="examplemod.png"
-credits="To the valued member of the AshleyCraft community! <3"
+logoFile="homoflesh.png"
+credits="To the valued members of the AshleyCraft community! <3"
 authors="kawaiicakes"
 
 description='''
-Prevents players from disconnecting. At least in a sense. ¯\_(ツ)_/¯
+Highly configurable. Horrifyingly births a homunculus flesh puppet clone when someone disconnects. Prevents players from disconnecting. At least in a sense. ¯\_(ツ)_/¯
 '''
 
-[[dependencies.icantdisconnect]]
+[[dependencies.homoflesh]]
     modId="forge"
     mandatory=true
     versionRange="[43,)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.icantdisconnect]]
+[[dependencies.homoflesh]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.19.2,1.20)"

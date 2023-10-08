@@ -4,9 +4,9 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '0.1.0'
-group = 'io.github.kawaiicakes.icantdisconnect'
-archivesBaseName = 'icantdisconnect'
+version = '1.0.0'
+group = 'io.github.kawaiicakes.homoflesh'
+archivesBaseName = 'homoflesh'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -23,10 +23,10 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            property 'forge.enabledGameTestNamespaces', 'examplemod'
+            property 'forge.enabledGameTestNamespaces', 'homoflesh'
 
             mods {
-                examplemod {
+                homoflesh {
                     source sourceSets.main
                 }
             }
@@ -39,10 +39,10 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            property 'forge.enabledGameTestNamespaces', 'examplemod'
+            property 'forge.enabledGameTestNamespaces', 'homoflesh'
 
             mods {
-                examplemod {
+                homoflesh {
                     source sourceSets.main
                 }
             }
@@ -55,10 +55,10 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            property 'forge.enabledGameTestNamespaces', 'examplemod'
+            property 'forge.enabledGameTestNamespaces', 'homoflesh'
 
             mods {
-                examplemod {
+                homoflesh {
                     source sourceSets.main
                 }
             }
@@ -71,10 +71,10 @@ minecraft {
 
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'homoflesh', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                examplemod {
+                homoflesh {
                     source sourceSets.main
                 }
             }
@@ -92,16 +92,12 @@ dependencies {
 
     minecraft 'net.minecraftforge:forge:1.19.2-43.2.14'
 
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
-    // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "icantdisconnect",
+                "Specification-Title"     : "homoflesh",
                 "Specification-Vendor"    : "kawaiicakes",
                 "Specification-Version"   : "0.1.0",
                 "Implementation-Title"    : project.name,
