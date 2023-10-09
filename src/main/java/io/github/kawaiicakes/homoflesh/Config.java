@@ -69,14 +69,14 @@ public class Config {
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        builder.push("Disconnected player entity settings");
+        builder.comment("test").push("Disconnected player entity settings");
 
         ALL_HOMUNCULI_ARE_INVULNERABLE = builder
                 .define("All homunculi are invincible.", false);
         HOMUNCULI_WANDER = builder
-                .define("Homunculi walk about. If false homunculi will attempt to stay or return to the same area.", false);
+                .define("Homunculi walk about. If false, homunculi will attempt to stay or return to the same area.", false);
         VISION_RANGE = builder
-                .defineInRange("Homunculi walk about. If false homunculi will attempt to stay or return to the same area.", 20, 2, 64);
+                .defineInRange("How far homunculi can see in blocks.", 20, 2, 64);
         // TODO future looting setting
         // TODO future configurable list of invulnerable players?
         // TODO viewable list of players who have been spotted by the homunculus?
