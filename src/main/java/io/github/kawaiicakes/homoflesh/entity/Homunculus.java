@@ -1,59 +1,30 @@
 package io.github.kawaiicakes.homoflesh.entity;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.logging.LogUtils;
-import io.github.kawaiicakes.homoflesh.networking.SpoofedClient;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.epoll.Epoll;
-import io.netty.channel.epoll.EpollSocketChannel;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import net.minecraft.DefaultUncaughtExceptionHandler;
-import net.minecraft.client.multiplayer.resolver.ResolvedServerAddress;
-import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.client.multiplayer.resolver.ServerNameResolver;
-import net.minecraft.network.*;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.stats.Stat;
-import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.DualStackUtils;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.server.ServerLifecycleHooks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.net.InetSocketAddress;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
-import static net.minecraft.network.Connection.NETWORK_EPOLL_WORKER_GROUP;
-import static net.minecraft.network.Connection.NETWORK_WORKER_GROUP;
-import static net.minecraftforge.network.NetworkHooks.registerClientLoginChannel;
+import static io.github.kawaiicakes.homoflesh.networking.SpoofedClient.getDummyConnection;
 
 public class Homunculus extends ServerPlayer implements NeutralMob {
-    public static Homunculus CAMELIA;
-    public static Homunculus CAMELIA() {
-        return CAMELIA;
-    }
-
-    public Homunculus(ServerLevel level, GameProfile name) throws InterruptedException {
+    public Homunculus(ServerLevel level, GameProfile name) {
         super(level.getServer(), level, name, null);
         this.connection = new FakePlayerNetHandler(level.getServer(), this);
     }
@@ -106,72 +77,7 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
     }
 
     @ParametersAreNonnullByDefault
-    public static class FakePlayerNetHandler extends ServerGamePacketListenerImpl {
-        private static final AtomicInteger UNIQUE_THREAD_ID = new AtomicInteger();
-        private static final Logger LOGGER = LogUtils.getLogger();
-        private static volatile Connection DUMMY_CONNECTION;
-
-        static Connection getDummyConnection() {
-            return DUMMY_CONNECTION;
-        }
-
-        @NotNull
-        public static Thread establishDummyConnection(final String pAddress) {
-            Thread thread = new Thread("Server Connector #" + UNIQUE_THREAD_ID.incrementAndGet()) {
-                @Override
-                public void run() {
-                    if (DUMMY_CONNECTION == null) {
-                        InetSocketAddress serverAddress = ServerNameResolver.DEFAULT
-                                .resolveAddress(ServerAddress.parseString(pAddress))
-                                .map(ResolvedServerAddress::asInetSocketAddress).orElseThrow();
-
-                        DualStackUtils.checkIPv6(serverAddress.getAddress());
-                        final Connection connection = new Connection(PacketFlow.CLIENTBOUND) {
-                            @Override
-                            public void channelActive(ChannelHandlerContext pContext) throws Exception {
-                                super.channelActive(pContext);
-
-                            }
-
-
-                        };
-                        // FIX THIS?
-                        Consumer<Connection> activationHandler = NetworkHooks::registerClientLoginChannel;
-                        Class<? extends SocketChannel> oclass;
-                        @SuppressWarnings("deprecation")
-                        LazyLoadedValue<? extends EventLoopGroup> lazyloadedvalue;
-                        if (Epoll.isAvailable()) {
-                            oclass = EpollSocketChannel.class;
-                            lazyloadedvalue = NETWORK_EPOLL_WORKER_GROUP;
-                        } else {
-                            oclass = NioSocketChannel.class;
-                            lazyloadedvalue = NETWORK_WORKER_GROUP;
-                        }
-
-                        (new Bootstrap()).group(lazyloadedvalue.get()).handler(new ChannelInitializer<>() {
-                            protected void initChannel(Channel p_129552_) {
-                                try {
-                                    p_129552_.config().setOption(ChannelOption.TCP_NODELAY, true);
-                                } catch (ChannelException ignored) {
-                                }
-
-                                p_129552_.pipeline().addLast("timeout", new ReadTimeoutHandler(30)).addLast("splitter", new Varint21FrameDecoder()).addLast("decoder", new PacketDecoder(PacketFlow.CLIENTBOUND)).addLast("prepender", new Varint21LengthFieldPrepender()).addLast("encoder", new PacketEncoder(PacketFlow.SERVERBOUND)).addLast("packet_handler", connection);
-                            }
-                        }).channel(oclass).connect(serverAddress.getHostName(), serverAddress.getPort()).syncUninterruptibly();
-
-                        DUMMY_CONNECTION = connection;
-                    }
-                    try {
-                        Homunculus.CAMELIA = new Homunculus(ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString("7d9c612a-813e-4610-8d7e-46a65376aae0"), "axolotlite"));
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            };
-
-            thread.setUncaughtExceptionHandler(new DefaultUncaughtExceptionHandler(LOGGER));
-            return thread;
-        }
+    private static class FakePlayerNetHandler extends ServerGamePacketListenerImpl {
 
         private FakePlayerNetHandler(MinecraftServer server, ServerPlayer player) {
             super(server, getDummyConnection(), player);
