@@ -54,7 +54,10 @@ public class SpoofedClient {
             startDummyConnection.start();
             startDummyConnection.join();
         }
-        new SpoofedServerConnectorThread().start();
+
+        Thread spoofedServerConnectorThread = new SpoofedServerConnectorThread();
+        spoofedServerConnectorThread.start();
+        spoofedServerConnectorThread.join();
     }
 
     private class SpoofedServerConnectorThread extends Thread {
@@ -71,8 +74,8 @@ public class SpoofedClient {
                     return;
                 }
 
-                if (SpoofedClient.DUMMY_CONNECTION == null || CAMELIA == null) {
-                    CAMELIA = new Homunculus(SpoofedClient.this.server.overworld(), new GameProfile(UUID.fromString("7d9c612a-813e-4610-8d7e-46a65376aae0"), "axolotlite"));
+                if (CAMELIA == null) {
+                    CAMELIA = new Homunculus(SpoofedClient.this.server.overworld(), SpoofedClient.DUMMY_CONNECTION, new GameProfile(UUID.fromString("7d9c612a-813e-4610-8d7e-46a65376aae0"), "axolotlite"));
                 }
 
                 Optional<InetSocketAddress> optional = ServerNameResolver.DEFAULT
@@ -119,11 +122,13 @@ public class SpoofedClient {
 
         @Override
         public void run() {
-            InetSocketAddress serverAddress = ServerNameResolver.DEFAULT
-                    .resolveAddress(ServerAddress.parseString(SpoofedClient.this.serverIp))
+            InetSocketAddress socketAddress = ServerNameResolver.DEFAULT
+                    .resolveAddress(new ServerAddress(SpoofedClient.this.serverIp, SpoofedClient.this.serverPort))
                     .map(ResolvedServerAddress::asInetSocketAddress).orElseThrow();
 
-            DUMMY_CONNECTION = Connection.connectToServer(serverAddress, true);
+            LOGGER.info("Resolving dummy connection at " + socketAddress);
+
+            DUMMY_CONNECTION = Connection.connectToServer(socketAddress, true);
         }
     }
 }

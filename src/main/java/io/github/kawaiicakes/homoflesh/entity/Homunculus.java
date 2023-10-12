@@ -1,6 +1,7 @@
 package io.github.kawaiicakes.homoflesh.entity;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.network.Connection;
 import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -18,15 +19,22 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 import static io.github.kawaiicakes.homoflesh.networking.SpoofedClient.getDummyConnection;
 
+@ParametersAreNonnullByDefault
 public class Homunculus extends ServerPlayer implements NeutralMob {
     public Homunculus(ServerLevel level, GameProfile name) {
         super(level.getServer(), level, name, null);
         this.connection = new FakePlayerNetHandler(level.getServer(), this);
+    }
+
+    public Homunculus(ServerLevel level, Connection connection, GameProfile name) {
+        super(level.getServer(), level, name, null);
+        this.connection = new FakePlayerNetHandler(level.getServer(), connection, this);
     }
 
     @Override public void displayClientMessage(Component chatComponent, boolean actionBar) { }
@@ -79,8 +87,12 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
     @ParametersAreNonnullByDefault
     private static class FakePlayerNetHandler extends ServerGamePacketListenerImpl {
 
-        private FakePlayerNetHandler(MinecraftServer server, ServerPlayer player) {
-            super(server, getDummyConnection(), player);
+        private FakePlayerNetHandler(MinecraftServer server, ServerPlayer player) throws NullPointerException {
+            super(server, Objects.requireNonNull(getDummyConnection()), player);
+        }
+
+        private FakePlayerNetHandler(MinecraftServer server, Connection connection, ServerPlayer player) {
+            super(server, connection, player);
         }
 
         @Override public void tick() { }
