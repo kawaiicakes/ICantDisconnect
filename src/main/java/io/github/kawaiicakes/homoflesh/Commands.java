@@ -2,7 +2,7 @@ package io.github.kawaiicakes.homoflesh;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.kawaiicakes.homoflesh.networking.SpoofedClient;
+import io.github.kawaiicakes.homoflesh.network.SpoofedClient;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

@@ -1,4 +1,4 @@
-package io.github.kawaiicakes.homoflesh.networking;
+package io.github.kawaiicakes.homoflesh.network;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
