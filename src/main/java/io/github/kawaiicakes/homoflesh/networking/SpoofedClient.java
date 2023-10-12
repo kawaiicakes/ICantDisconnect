@@ -18,7 +18,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * This class runs on an ephemeral thread on the server's end to fake a connection from a client.
+ * This class runs ephemeral thread on the server's end to fake a connection from a client. One connection is used for
+ * all clients. Packets sent to the homunculi therefore must include the UUID(s) of the target homunculus(i).
  */
 public class SpoofedClient {
     private static final AtomicInteger UNIQUE_THREAD_ID = new AtomicInteger(0);
@@ -119,6 +120,7 @@ public class SpoofedClient {
             super("Dummy Connection #" + UNIQUE_THREAD_ID.get());
         }
 
+        // TODO: add exception/disconnection handling.
         @Override
         public void run() {
             InetSocketAddress socketAddress = ServerNameResolver.DEFAULT
