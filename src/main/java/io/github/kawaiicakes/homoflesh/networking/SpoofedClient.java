@@ -57,7 +57,6 @@ public class SpoofedClient {
 
         Thread spoofedServerConnectorThread = new SpoofedServerConnectorThread();
         spoofedServerConnectorThread.start();
-        spoofedServerConnectorThread.join();
     }
 
     private class SpoofedServerConnectorThread extends Thread {
@@ -128,6 +127,14 @@ public class SpoofedClient {
 
             LOGGER.info("Resolving dummy connection at " + socketAddress);
 
+            /*
+            for some reason this actually causes the connection to be refused
+
+            if (SpoofedClient.this.server instanceof IntegratedServer) {
+                DUMMY_CONNECTION = Connection.connectToLocalServer(socketAddress);
+                return;
+            }
+             */
             DUMMY_CONNECTION = Connection.connectToServer(socketAddress, true);
         }
     }
