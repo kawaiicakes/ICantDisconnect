@@ -3,6 +3,7 @@ package io.github.kawaiicakes.homoflesh.networking;
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
 import io.github.kawaiicakes.homoflesh.entity.Homunculus;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.resolver.ResolvedServerAddress;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.client.multiplayer.resolver.ServerNameResolver;
@@ -93,6 +94,7 @@ public class SpoofedClient {
                 }
 
                 inetsocketaddress = optional.get();
+                DUMMY_CONNECTION.setListener(new ClientPacketListener(null, null, DUMMY_CONNECTION, CAMELIA.getGameProfile(), null));
                 SpoofedClient.this.server.getPlayerList().placeNewPlayer(CAMELIA.connection.getConnection(), CAMELIA);
 
             } catch (Exception exception2) {
