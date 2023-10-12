@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "io.github.kawaiicakes.homoflesh.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "refmap.homoflesh.json",
+  "mixins": [
+    "PlayerListMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

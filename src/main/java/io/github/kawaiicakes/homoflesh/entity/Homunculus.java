@@ -2,6 +2,7 @@ package io.github.kawaiicakes.homoflesh.entity;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ServerboundClientInformationPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -17,9 +18,9 @@ import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public class Homunculus extends ServerPlayer implements NeutralMob {
-    public Homunculus(ServerLevel level, Connection connection, GameProfile name) {
+    public Homunculus(ServerLevel level, GameProfile name) {
         super(level.getServer(), level, name, null);
-        this.connection = new FakePlayerNetHandler(level.getServer(), connection, this);
+        this.connection = new FakePlayerNetHandler(level.getServer(), this);
     }
 
     @Override public void updateOptions(ServerboundClientInformationPacket packet) { }
@@ -65,8 +66,10 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
 
     @ParametersAreNonnullByDefault
     private static class FakePlayerNetHandler extends ServerGamePacketListenerImpl {
-        private FakePlayerNetHandler(MinecraftServer server, Connection connection, ServerPlayer player) {
-            super(server, connection, player);
+        private static Connection DUMMY_CONNECTION = new Connection(PacketFlow.CLIENTBOUND);
+
+        private FakePlayerNetHandler(MinecraftServer server, ServerPlayer player) {
+            super(server, DUMMY_CONNECTION, player);
         }
     }
 }
