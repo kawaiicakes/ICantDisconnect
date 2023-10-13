@@ -14,8 +14,15 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.internal.BrandingControl;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
@@ -100,7 +107,7 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
             // FIXME: come back here later. the stuff affecting the local player on the client (e.g. ClientboundSetHeldItem) is suspicious
             this.handleCustomPayload(new ServerboundCustomPayloadPacket(ServerboundCustomPayloadPacket.BRAND, new FriendlyByteBuf(Unpooled.buffer()).writeUtf(BrandingControl.getClientBranding())));
             // TODO: fire on datapack sync?
-            this.player.server.getPlayerList().sendPlayerPermissionLevel(this.player);
+            this.server.getPlayerList().sendPlayerPermissionLevel(this.player);
             this.player.getStats().markAllDirty(); // necessary?
             this.teleport(this.player.getX(), this.player.getY(), this.player.getZ(), this.player.getYRot(), this.player.getXRot());
         }
@@ -115,9 +122,8 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
         public void handleMovePlayer(ServerboundMovePlayerPacket pPacket) {
             PacketUtils.ensureRunningOnSameThread(pPacket, this, this.player.getLevel());
 
-            /* ServerLevel level = this.player.getLevel();
+            ServerLevel serverlevel = this.player.getLevel();
             if (!this.player.wonGame) {
-                wtf is this
                 if (this.tickCount == 0) {
                     this.resetPosition();
                 }
@@ -216,8 +222,6 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
                     }
                 }
             }
-
-             */
         }
     }
 }
