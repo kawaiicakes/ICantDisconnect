@@ -46,7 +46,7 @@ public class PlayerListMixin {
     public void broadcastSystemMessage(Component component, boolean bypass) {}
 
     @Shadow
-    public void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {}
+    protected void updateEntireScoreboard(ServerScoreboard scoreboard, ServerPlayer player) {}
 
     @Inject(
             method = "placeNewPlayer",
@@ -76,6 +76,7 @@ public class PlayerListMixin {
             }
             this.broadcastSystemMessage(mutablecomponent.withStyle(ChatFormatting.YELLOW), false);
 
+            packetHandler.teleport(homo.getX(), homo.getY(), homo.getZ(), homo.getYRot(), homo.getXRot());
             this.players.add(homo);
             this.playersByUUID.put(homo.getUUID(), homo);
             this.broadcastAll(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, homo));

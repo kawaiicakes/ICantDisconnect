@@ -6,10 +6,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.PacketUtils;
-import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
-import net.minecraft.network.protocol.game.ServerboundClientInformationPacket;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
-import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +16,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.AABB;
@@ -99,6 +97,11 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
             spoofClientHandleLoginReply();
         }
 
+        @Override
+        public void tick() {
+            super.tick();
+        }
+
         // trying to avoid adding extraneous calls related purely to client shit, even if stuff is sent to the server
         private void spoofClientHandleLoginReply() {
             // TODO: fire player login event?
@@ -109,13 +112,23 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
             // TODO: fire on datapack sync?
             this.server.getPlayerList().sendPlayerPermissionLevel(this.player);
             this.player.getStats().markAllDirty(); // necessary?
-            this.teleport(this.player.getX(), this.player.getY(), this.player.getZ(), this.player.getYRot(), this.player.getXRot());
         }
 
         @Override
         public void teleport(double pX, double pY, double pZ, float pYaw, float pPitch, Set<ClientboundPlayerPositionPacket.RelativeArgument> pRelativeSet, boolean pDismountVehicle) {
+            double deltaX = pX != this.player.xOld ? pX - this.player.xOld : 0;
+            double deltaY = pY != this.player.yOld ? pY - this.player.yOld : 0;
+            double deltaZ = pZ != this.player.zOld ? pZ - this.player.zOld : 0;
+
+            this.player.setDeltaMovement(deltaX, deltaY, deltaZ);
             this.player.absMoveTo(pX, pY, pZ, pYaw, pPitch);
-            // this.player.connection.send(new ClientboundPlayerPositionPacket(pX - d0, pY - d1, pZ - d2, pYaw - f, pPitch - f1, pRelativeSet, this.awaitingTeleport, pDismountVehicle));
+
+            this.player.xOld = pX;
+            this.player.yOld = pY;
+            this.player.zOld = pZ;
+            this.player.xo = pX;
+            this.player.yo = pY;
+            this.player.zo = pZ;
         }
 
         @Override
