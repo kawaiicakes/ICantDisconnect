@@ -198,7 +198,7 @@ public class Homunculus extends ServerPlayer implements NeutralMob {
                             boolean flag2 = false;
                             if (!this.player.isChangingDimension() && d11 > 0.0625D && !this.player.isSleeping() && !this.player.gameMode.isCreative() && this.player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) {
                                 flag2 = true;
-                                LOGGER.warn("{} moved wrongly!", (Object)this.player.getName().getString());
+                                LOGGER.warn("{} moved wrongly!", this.player.getName().getString());
                             }
 
                             this.player.absMoveTo(d0, d1, d2, f, f1);
